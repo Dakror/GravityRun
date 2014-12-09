@@ -1,0 +1,19 @@
+package de.dakror.gravityrun.render;
+
+import java.awt.Graphics2D;
+
+/**
+ * Base interface for anything to be drawn
+ * 
+ * @author Dakror
+ */
+public interface Drawable {
+	public void draw(Graphics2D g);
+	
+	/**
+	 * Update pseodo-thread. Just to split logic from drawing
+	 * 
+	 * @param deltaTime the time in seconds since the last frame
+	 */
+	public void update(float deltaTime);
+}
