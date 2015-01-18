@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 /**
  * Base interface for anything to be drawn
  * 
- * @author Dakror
+ * @author Maximilian Stark | Dakror
  */
 public interface Drawable {
 	public void draw(Graphics2D g);

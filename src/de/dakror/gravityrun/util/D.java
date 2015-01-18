@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Central debugging class.
  * Very short names for easy and fast typing :)
  * 
- * @author Dakror
+ * @author Maximilian Stark | Dakror
  */
 public class D {
 	static long last = 0;

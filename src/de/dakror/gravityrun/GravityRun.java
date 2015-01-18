@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import de.dakror.gravityrun.render.Drawable;
 
 /**
- * @author Dakror
+ * @author Maximilian Stark | Dakror
  */
 public class GravityRun extends JFrame implements Drawable {
 	private static final long serialVersionUID = 1L;

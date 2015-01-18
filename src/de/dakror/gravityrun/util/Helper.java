@@ -31,7 +31,7 @@ import de.dakror.gravityrun.GravityRun;
 /**
  * Copied from my GameSetup lib. Maybe could be improved.
  * 
- * @author Dakror
+ * @author Maximilian Stark | Dakror
  */
 public class Helper {
 	// -- draw helper methods -- //
