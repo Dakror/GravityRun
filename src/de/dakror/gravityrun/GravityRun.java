@@ -1,5 +1,6 @@
 package de.dakror.gravityrun;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -8,7 +9,9 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import de.dakror.gravityrun.render.Drawable;
+import de.dakror.gravityrun.game.Game;
+import de.dakror.gravityrun.layer.LayerManager;
+import de.dakror.gravityrun.ui.Drawable;
 
 /**
  * @author Maximilian Stark | Dakror
@@ -28,8 +31,11 @@ public class GravityRun extends JFrame implements Drawable {
 		setLocationRelativeTo(null);
 		setVisible(true);
 		
+		setBackground(Color.black);
+		
 		createBufferStrategy(2);
 		
+		LayerManager.instance.addLayer(new Game());
 		mainLoop();
 	}
 	
@@ -41,7 +47,6 @@ public class GravityRun extends JFrame implements Drawable {
 			BufferStrategy bs = getBufferStrategy();
 			g = (Graphics2D) bs.getDrawGraphics();
 			g.translate(getInsets().left, getInsets().top);
-			
 			
 			update((System.currentTimeMillis() - last) / 1_000f);
 			
@@ -55,10 +60,14 @@ public class GravityRun extends JFrame implements Drawable {
 	}
 	
 	@Override
-	public void draw(Graphics2D g) {}
+	public void draw(Graphics2D g) {
+		LayerManager.instance.draw(g);
+	}
 	
 	@Override
-	public void update(float deltaTime) {}
+	public void update(float deltaTime) {
+		LayerManager.instance.update(deltaTime);
+	}
 	
 	public int innerWidth() {
 		return getWidth() - (getInsets().left + getInsets().right);

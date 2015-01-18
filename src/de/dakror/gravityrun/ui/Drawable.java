@@ -1,4 +1,4 @@
-package de.dakror.gravityrun.render;
+package de.dakror.gravityrun.ui;
 
 import java.awt.Graphics2D;
 
