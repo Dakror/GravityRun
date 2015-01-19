@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import de.dakror.gravityrun.game.Game;
+import de.dakror.gravityrun.game.tile.Block;
 import de.dakror.gravityrun.layer.LayerManager;
 import de.dakror.gravityrun.ui.Drawable;
 
@@ -105,6 +106,12 @@ public class GravityRun extends JFrame implements Drawable {
 	}
 	
 	public static void main(String[] args) {
-		new GravityRun();
+		// new GravityRun();
+		
+		Block block = new Block();
+		block.init();
+		
+		block.setRegion(0, 0, 14, 5, Color.red);
+		System.out.println(block.serialize());
 	}
 }
