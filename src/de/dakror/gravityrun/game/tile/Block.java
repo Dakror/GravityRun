@@ -1,6 +1,7 @@
 package de.dakror.gravityrun.game.tile;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.Base64;
 import java.util.zip.DataFormatException;
@@ -27,18 +28,23 @@ public class Block {
 	 */
 	short[] tiles;
 	
+	BufferedImage batch;
+	
 	/**
 	 * Lazy initialization for OPTIMAL EFFICIENCY
 	 */
 	public void init() {
+		if (isInitialized()) return;
+		
 		tiles = new short[TILE_COUNT * TILE_COUNT];
+		batch = new BufferedImage(TILE_COUNT * TILE_SIZE, TILE_COUNT * TILE_SIZE, BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	/**
 	 * @return true if this block has been initialized, false otherwise.
 	 */
 	public boolean isInitialized() {
-		return tiles != null;
+		return tiles != null && batch != null;
 	}
 	
 	/**
@@ -51,7 +57,17 @@ public class Block {
 	public void set(int x, int y, int colorIndex) {
 		checkInBounds(x, y);
 		
+		int old = get(x, y);
 		tiles[x * TILE_COUNT + y] = (short) colorIndex;
+		
+		if (old != get(x, y)) {
+			int rgb = Palette.instance.getWithAlpha(colorIndex).getRGB();
+			for (int i = 0; i < TILE_SIZE; i++) {
+				for (int j = 0; j < TILE_SIZE; j++) {
+					batch.setRGB(x + i, y + j, rgb);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -101,8 +117,19 @@ public class Block {
 	 * 
 	 * @param x in local space (0 - TILE_COUNT)
 	 * @param y in local space (0 - TILE_COUNT)
+	 * @return unsigned int (0 - 65535)
 	 */
 	public int get(int x, int y) {
+		return Short.toUnsignedInt(getAsShort(x, y));
+	}
+	
+	/**
+	 * Gets the color index of a tile in this block.
+	 * 
+	 * @param x in local space (0 - TILE_COUNT)
+	 * @param y in local space (0 - TILE_COUNT)
+	 */
+	public short getAsShort(int x, int y) {
 		return tiles[x * TILE_COUNT + y];
 	}
 	
@@ -113,7 +140,17 @@ public class Block {
 	 * @param y in local space (0 - TILE_COUNT)
 	 */
 	public Color getColor(int x, int y) {
-		return new Color(get(x, y));
+		return Palette.instance.get(get(x, y));
+	}
+	
+	/**
+	 * Gets the color of a tile in this block.
+	 * 
+	 * @param x in local space (0 - TILE_COUNT)
+	 * @param y in local space (0 - TILE_COUNT)
+	 */
+	public Color getColorWithAlpha(int x, int y) {
+		return Palette.instance.getWithAlpha(get(x, y));
 	}
 	
 	/**
@@ -168,13 +205,49 @@ public class Block {
 		
 		ByteBuffer bb = ByteBuffer.wrap(data);
 		
-		if (tiles == null) tiles = new short[TILE_COUNT * TILE_COUNT];
-		for (int i = 0; i < TILE_COUNT * TILE_COUNT; i++)
-			tiles[i] = bb.getShort();
+		init();
+		
+		for (int i = 0; i < TILE_COUNT; i++)
+			for (int j = 0; j < TILE_COUNT; j++)
+				set(i, j, bb.getShort());
+	}
+	
+	/**
+	 * Loads the block pixel by pixel from the image provided.
+	 * 
+	 * @param image
+	 */
+	public void load(BufferedImage image) {
+		if (image.getWidth() != TILE_COUNT || image.getHeight() != TILE_COUNT) throw new IllegalArgumentException("Invalid image size!");
+		
+		init();
+		
+		for (int i = 0; i < image.getWidth(); i++)
+			for (int j = 0; j < image.getHeight(); j++)
+				set(i, j, Palette.instance.indexOf(image.getRGB(i, j)));
 	}
 	
 	void checkInBounds(int x, int y) {
 		boolean inBounds = x >= 0 && y >= 0 && x < TILE_COUNT && y < TILE_COUNT;
 		if (!inBounds) throw new IllegalArgumentException("Coordinates out of bounds!");
+	}
+	
+	/**
+	 * @return the prerendered batch of this block.
+	 */
+	public BufferedImage getBatch() {
+		return batch;
+	}
+	
+	public float getX() {
+		return x;
+	}
+	
+	public void setX(float x) {
+		this.x = x;
+	}
+	
+	public float getY() {
+		return y;
 	}
 }

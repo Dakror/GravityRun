@@ -17,6 +17,13 @@ public class Palette {
 	public static final int STEP = 8;
 	
 	/**
+	 * This color serves as fake-transparency. That way we don't have to mess with alpha values anywhere.<br>
+	 * Fully transparent or opaque.
+	 */
+	public static final Color TRANSPARENT = new Color(255, 0, 255);
+	public static final Color TRANSPARENT_RGBA = new Color(0, 0, 0, 0);
+	
+	/**
 	 * Global only instance
 	 */
 	public static final Palette instance = new Palette();
@@ -50,6 +57,11 @@ public class Palette {
 	
 	public Color get(int index) {
 		return colors.get(index);
+	}
+	
+	public Color getWithAlpha(int index) {
+		if (get(index).equals(TRANSPARENT)) return TRANSPARENT_RGBA;
+		else return get(index);
 	}
 	
 	public int getRGB(int index) {
