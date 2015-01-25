@@ -24,7 +24,8 @@ public class Game implements Layer {
 	
 	@Override
 	public void enter() {
-		block.load(GravityRun.getImage("flat.png"));
+		block = new Block();
+		block.load(GravityRun.getImage("tiles/flat.png"));
 	}
 	
 	@Override

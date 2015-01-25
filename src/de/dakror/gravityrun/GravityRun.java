@@ -79,7 +79,7 @@ public class GravityRun extends JFrame implements Drawable {
 	
 	public BufferedImage loadImage(String p) {
 		try {
-			BufferedImage i = ImageIO.read(GravityRun.class.getResource((p.startsWith("/") ? "" : "/img/") + p));
+			BufferedImage i = ImageIO.read(GravityRun.class.getResource((p.startsWith("/") ? "" : "/assets/") + p));
 			
 			return i;
 		} catch (Exception e) {
